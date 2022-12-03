@@ -1,12 +1,9 @@
-package com.danielarrais.productservice.model;
+package com.danielarrais.productservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.math.BigDecimal;
 
@@ -14,9 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(value = "Product")
-public class Product {
-    @Id
+public class ProductResponse {
     private String id;
     private String name;
     private String description;
