@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     public void placeOrder(OrderRequest orderRequest) {
         List<OrderLineItems> orderLineItems =
@@ -38,8 +38,8 @@ public class OrderService {
                 .map(OrderLineItems::getSkuCode)
                 .toList();
 
-        InventoryResponse[] inStockResponse = webClient.get()
-                .uri("http://localhost:8082/api/inventory",
+        InventoryResponse[] inStockResponse = webClientBuilder.build().get()
+                .uri("http://inventory-service/api/inventory",
                         uriBuilder -> uriBuilder.queryParam("sku-codes", skuCodes).build())
                 .retrieve()
                 .bodyToMono(InventoryResponse[].class)
