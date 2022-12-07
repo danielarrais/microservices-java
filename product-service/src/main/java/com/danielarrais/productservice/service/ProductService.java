@@ -4,13 +4,9 @@ import com.danielarrais.productservice.dto.ProductRequest;
 import com.danielarrais.productservice.dto.ProductResponse;
 import com.danielarrais.productservice.model.Product;
 import com.danielarrais.productservice.repository.ProductRepository;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class ProductService {
