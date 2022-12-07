@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  db:
+  db_services:
     image: mysql:8.0
     restart: always
     environment:
@@ -16,8 +16,9 @@ services:
     environment:
       - MYSQL_DATABASE=keycloak
       - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_TCP_PORT=3307
     ports:
-      - '3307:3306'
+      - '3307:3307'
     volumes:
       - db_keycloak:/var/lib/mysql
   keycloak:
@@ -28,7 +29,7 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - DB_VENDOR=mysql
       - DB_ADDR=mysql-kc
-      - DB_PORT=3306
+      - DB_PORT=3307
       - DB_USER=root
       - DB_PASSWORD=root
       - DB_DATABASE=keycloak
