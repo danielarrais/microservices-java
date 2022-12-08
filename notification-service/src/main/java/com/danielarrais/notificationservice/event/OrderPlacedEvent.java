@@ -1,4 +1,4 @@
-package com.danielarrais.orderservice.event;
+package com.danielarrais.notificationservice.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class OrderPlacedEvent {
-
     private String orderNumber;
 }
