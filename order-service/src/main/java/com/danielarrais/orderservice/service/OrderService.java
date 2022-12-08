@@ -3,12 +3,14 @@ package com.danielarrais.orderservice.service;
 import com.danielarrais.orderservice.dto.InventoryResponse;
 import com.danielarrais.orderservice.dto.OrderLineItemsDTO;
 import com.danielarrais.orderservice.dto.OrderRequest;
+import com.danielarrais.orderservice.event.OrderPlacedEvent;
 import com.danielarrais.orderservice.exception.ProductsOutOfStockException;
 import com.danielarrais.orderservice.model.Order;
 import com.danielarrais.orderservice.model.OrderLineItems;
 import com.danielarrais.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -24,6 +26,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
+    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
     @SneakyThrows
     public void placeOrder(OrderRequest orderRequest) {
@@ -51,6 +54,7 @@ public class OrderService {
 
         if (allProductsInStock) {
             orderRepository.save(order);
+            kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(order.getOrderNumber()));
         } else {
             throw new ProductsOutOfStockException("Product is not in stock, please try again later");
         }
