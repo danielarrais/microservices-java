@@ -10,6 +10,11 @@ services:
       - '3306:3306'
     volumes:
       - db:/var/lib/mysql
+  zipkin:
+    image: openzipkin/zipkin:latest
+    restart: always
+    ports:
+      - '9411:9411'
   db_keycloak:
     image: mysql:8.0
     restart: always
