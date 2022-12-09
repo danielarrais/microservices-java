@@ -33,11 +33,16 @@ services:
       - DB_USER=root
       - DB_PASSWORD=root
       - DB_DATABASE=keycloak
+      - KEYCLOAK_IMPORT=/tmp/realm.json
     ports:
-      - '8090:8080'
-    command: start-dev
+      - '8080:8080'
+    command:
+      - start-dev
+      - --import-realm
     depends_on:
       - db_keycloak
+    volumes:
+      - ./setup/keycloak/realm.json:/opt/keycloak/data/import/realm.json
   zipkin:
     image: openzipkin/zipkin:latest
     restart: always
@@ -78,9 +83,9 @@ services:
     image: danielarrais/api-gateway:latest
     container_name: api-gateway
     ports:
-      - "8080:8080"
+      - "8282:8080"
     expose:
-      - "8080"
+      - "8282"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
@@ -90,9 +95,21 @@ services:
 
   discovery-server:
     image: danielarrais/discovery-server:latest
+    container_name: discovery-server
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
+      - zipkin
+
+  product-service:
+    image: danielarrais/product-service:latest
+    container_name: product-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mongodb
+      - discovery-server
+      - api-gateway
       - zipkin
 #
 #  inventory-service:
@@ -127,16 +144,6 @@ services:
 #      - discovery-server
 #      - api-gateway
 #      - db-services
-#
-#  product-service:
-#    image: danielarrais/product-service:latest
-#    container_name: product-service
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=docker
-#    depends_on:
-#      - mongodb
-#      - discovery-server
-#      - api-gateway
 
 volumes:
   db:
