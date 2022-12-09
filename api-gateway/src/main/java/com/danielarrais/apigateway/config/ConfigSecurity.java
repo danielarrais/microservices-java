@@ -15,7 +15,7 @@ public class ConfigSecurity {
         serverHttpSecurity.csrf()
                 .disable()
                 .authorizeExchange(exchangeSpec -> exchangeSpec
-                        .pathMatchers("/eureka/**")
+                        .pathMatchers("/eureka/**", "/dashboard/**")
                         .permitAll()
                         .anyExchange()
                         .authenticated())

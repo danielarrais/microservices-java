@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  db_services:
+  db-services:
     image: mysql:8.0
     restart: always
     environment:
@@ -10,11 +10,6 @@ services:
       - '3306:3306'
     volumes:
       - db:/var/lib/mysql
-  zipkin:
-    image: openzipkin/zipkin:latest
-    restart: always
-    ports:
-      - '9411:9411'
   db_keycloak:
     image: mysql:8.0
     restart: always
@@ -43,6 +38,11 @@ services:
     command: start-dev
     depends_on:
       - db_keycloak
+  zipkin:
+    image: openzipkin/zipkin:latest
+    restart: always
+    ports:
+      - '9411:9411'
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
@@ -64,6 +64,80 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+  mongodb:
+    container_name: mongo
+    image: mongo:5.0
+    restart: always
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
+
+  # Microservices
+  api-gateway:
+    image: danielarrais/api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - zipkin
+      - discovery-server
+      - keycloak
+
+  discovery-server:
+    image: danielarrais/discovery-server:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - zipkin
+#
+#  inventory-service:
+#    image: danielarrais/inventory-service:latest
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    depends_on:
+#      - zipkin
+#      - discovery-server
+#      - db-services
+#      - api-gateway
+#
+#  notification-service:
+#    image: danielarrais/notification-service:latest
+#    container_name: notification-service
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    depends_on:
+#      - zipkin
+#      - broker
+#      - discovery-server
+#      - api-gateway
+#
+#  order-service:
+#    image: danielarrais/order-service:latest
+#    container_name: order-service
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    depends_on:
+#      - broker
+#      - zipkin
+#      - discovery-server
+#      - api-gateway
+#      - db-services
+#
+#  product-service:
+#    image: danielarrais/product-service:latest
+#    container_name: product-service
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    depends_on:
+#      - mongodb
+#      - discovery-server
+#      - api-gateway
+
 volumes:
   db:
     driver: local
