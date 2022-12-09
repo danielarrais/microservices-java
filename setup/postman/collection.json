@@ -1,0 +1,189 @@
+{
+	"info": {
+		"_postman_id": "cfc26b65-03e3-40a6-9fec-a75549c6da2b",
+		"name": "Microservices Java",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "post order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Bearer",
+								"value": "",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orderLineItems\": [\n        {\n            \"skuCode\": \"galaxy_22\",\n            \"price\": 1200,\n            \"quantity\": 10\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8282/api/order",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8282",
+							"path": [
+								"api",
+								"order"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "get products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://0.0.0.0:{{api-gateway-port}}/api/product",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "{{api-gateway-port}}",
+							"path": [
+								"api",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Creme dental\",\n    \"description\": \"Limpa dos dentes\",\n    \"price\": 10.0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8080/api/product",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "clientSecret",
+				"value": "zYZK73QTbxC3gwiYzdSuTrj7dfLDhmS2",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "http://keycloak:8080/realms/spring-boot-microservices-realm/protocol/openid-connect/token",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "accessToken",
+				"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIwRlA4OWtrV1RodUZlVDV6S1ZTY29nSWpraWpXUGV4S0pRQl9URFVjR3VBIn0.eyJleHAiOjE2NzA1OTA1NzQsImlhdCI6MTY3MDU5MDI3NCwianRpIjoiYmIyNmRiMzktMmQ1Yy00MTAyLWJkM2UtMzJkOGU3MGVjYTRmIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDkwL3JlYWxtcy9zcHJpbmctYm9vdC1taWNyb3NlcnZpY2VzLXJlYWxtIiwic3ViIjoiZWViM2YzNGItNGNjZC00NGMwLTkyNTAtYTc2YWZlYzYyOTYxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoic3ByaW5nLWNsb3VkLWNsaWVudCIsImFjciI6IjEiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6InNwcmluZy1jbG91ZC1jbGllbnQiLCJjbGllbnRIb3N0IjoiMTcyLjE5LjAuMSIsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1zcHJpbmctY2xvdWQtY2xpZW50IiwiY2xpZW50QWRkcmVzcyI6IjE3Mi4xOS4wLjEifQ.mUzkHGU_BGxVcU1DXysak05UD09-mYnvcHkbL-anKxc2HcppoO8-tNpd9Gy2fa_CGXshOOB8v3I4qQsJsTTasjl7EYIS2bZdiH09rdTK8F4w-lDJx7Dl5sMmBHJkxmabAY5fUNnEVtLbeyJQIJWQn0WFpTBB3chh9Fxs2IwTRpjw-SqElGP1JBUjQ2zDjcrVnNv0kSanp6HOy3lj6Na2VLy2_GuoJ1RBDnnETE8E4SCLVfO33zovKYqU1H7fr5knZdttbDHPhgJyRJ5ufGTwDWaOH1xt0oyf0qwH3NjoNxc-o5TVm9J_IGtewl6ILc72TffTrSfNMT667pzypY4lDA",
+				"type": "string"
+			},
+			{
+				"key": "scope",
+				"value": "openid offline_access",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "spring-cloud-client",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "client_credentials",
+				"type": "string"
+			},
+			{
+				"key": "tokenName",
+				"value": "token",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api-gateway-port",
+			"value": "8282"
+		}
+	]
+}
