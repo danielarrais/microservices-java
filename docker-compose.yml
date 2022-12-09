@@ -10,6 +10,7 @@ services:
       - '3306:3306'
     volumes:
       - db:/var/lib/mysql
+
   db_keycloak:
     image: mysql:8.0
     restart: always
@@ -21,6 +22,7 @@ services:
       - '3307:3307'
     volumes:
       - db_keycloak:/var/lib/mysql
+
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:20.0.1
@@ -43,6 +45,7 @@ services:
       - db_keycloak
     volumes:
       - ./setup/keycloak/realm.json:/opt/keycloak/data/import/realm.json
+
   zipkin:
     image: openzipkin/zipkin:latest
     restart: always
@@ -52,8 +55,9 @@ services:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+
   broker:
     image: confluentinc/cp-kafka:7.3.0
     container_name: broker
@@ -62,13 +66,14 @@ services:
     depends_on:
       - zookeeper
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+
   mongodb:
     container_name: mongo
     image: mongo:5.0
@@ -111,39 +116,39 @@ services:
       - discovery-server
       - api-gateway
       - zipkin
-#
-#  inventory-service:
-#    image: danielarrais/inventory-service:latest
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=docker
-#    depends_on:
-#      - zipkin
-#      - discovery-server
-#      - db-services
-#      - api-gateway
-#
-#  notification-service:
-#    image: danielarrais/notification-service:latest
-#    container_name: notification-service
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=docker
-#    depends_on:
-#      - zipkin
-#      - broker
-#      - discovery-server
-#      - api-gateway
-#
-#  order-service:
-#    image: danielarrais/order-service:latest
-#    container_name: order-service
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=docker
-#    depends_on:
-#      - broker
-#      - zipkin
-#      - discovery-server
-#      - api-gateway
-#      - db-services
+
+  inventory-service:
+    image: danielarrais/inventory-service:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - zipkin
+      - discovery-server
+      - db-services
+      - api-gateway
+
+  notification-service:
+    image: danielarrais/notification-service:latest
+    container_name: notification-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - zipkin
+      - broker
+      - discovery-server
+      - api-gateway
+
+  order-service:
+    image: danielarrais/order-service:latest
+    container_name: order-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - broker
+      - zipkin
+      - discovery-server
+      - api-gateway
+      - db-services
 
 volumes:
   db:
